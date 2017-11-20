@@ -6,10 +6,38 @@ PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
 PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
 PREFIX rev:	<http://purl.org/stuff/rev#>
 
-# How many consoles did nintendo produce?
+# How many consoles did Nintendo produce?
 SELECT COUNT(?console) AS ?numConsoles
 WHERE {
   ?console :madeBy ?organization .  
 }
 GROUP BY ?organization
+
+# Which console(s) made by Nintendo came out after 1997?
+SELECT ?console
+WHERE {
+  ?console :madeBy :Nintendo .
+  ?console :releaseYear ?releaseYear .  
+  FILTER(?releaseYear > 1997)
+}
+
+# About which consoles do we not know their number of supported controllers yet if they are NOT portable game consoles?
+SELECT ?console
+WHERE {
+  ?console rdf:type :GameConsole .
+  FILTER NOT EXIST { ?console rdf:type :PortableGameConsole . }
+  FILTER NOT EXIST { ?console :numOfSupportedControllers ?anyNumber . }  
+}
+
+# Is there a game console without a review?
+ASK {
+  ?console rdf:type :GameConsole .
+  FILTER NOT EXIST { ?console rev:hasReview ?anyReview . }
+}
+
+# Show all Consoles that have at least one review
+SELECT DISTINCT ?console
+WHERE {
+  ?console rev:hasReview ?anyReview .
+}
 
