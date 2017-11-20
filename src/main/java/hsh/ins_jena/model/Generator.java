@@ -29,15 +29,20 @@ public class Generator {
 		Resource rdfProperty = model.createResource(rdfUri+"Property");
 		
 		Property rdfsSubclassOf = model.createProperty(rdfsUri+"subclassOf");
+		Property rdfsSubPropertyOf = model.createProperty(rdfsUri+"subPropertyOf");
 		Property rdfsDomain = model.createProperty(rdfsUri+"domain");
 		Property rdfsRange = model.createProperty(rdfsUri+"range");
+		Property rdfsLabel = model.createProperty(rdfsUri+"label");
+		Property rdfsDatatype = model.createProperty(rdfsUri+"Datatype");
 
+		
 		Resource foafPerson = model.createResource(foafUri+"Person");
 		Resource foafOrganization = model.createResource(foafUri+"Organization");
 
 		Resource xsdInt = model.createResource(xsdUri+"int");
 		Resource xsdBoolean = model.createResource(xsdUri+"boolean");
 		Resource xsdString = model.createResource(xsdUri+"string");
+
 		
 		// Own classes
 		Resource gameConsole = model.createResource(ownUri+"GameConsole");
@@ -98,6 +103,15 @@ public class Generator {
 		madeBy.addProperty(rdfType, rdfProperty);
 		madeBy.addProperty(rdfsDomain, gameConsole);
 		madeBy.addProperty(rdfsRange, foafOrganization);
+
+		// Declare our datatype
+		Resource priceEur = model.createResource(ownUri+"PriceEur");
+		priceEur.addProperty(rdfType, rdfsDatatype);
+		priceEur.addProperty(rdfsLabel, "Preis in Euro");
+
+		// Use of subPropertyOf
+		predecessorOfConsole.addProperty(rdfsSubPropertyOf, relatedToConsole);
+		successorOfConsole.addProperty(rdfsSubPropertyOf, relatedToConsole);
 
 		// Store the model into a file
 		Generator.writeModelToFile(model, "./output/tbox.ttl");
