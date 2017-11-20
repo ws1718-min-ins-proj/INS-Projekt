@@ -5,6 +5,13 @@
 @prefix foaf:	<http://xmlns.com/foaf/0.1/> .
 @prefix rev:	<http://purl.org/stuff/rev#> .
 
+# Our classes
+:GameConsole	rdf:type rdf:Class .
+
+:PortableGameConsole	rdf:type rdf:Class ;
+			rdfs:subclassOf :GameConsole .
+
+
 # Our own properties
 :ceo    rdf:type    rdf:Property ;
         rdfs:domain foaf:Organization ;
