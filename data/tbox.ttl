@@ -46,6 +46,9 @@
                     rdfs:domain :GameConsole ;
                     rdfs:range  foaf:Organization .
 
+:hasPrice           rdf:type    rdf:Property ;
+                    rdfs:domain :GameConsole ;
+                    rdfs:range  :PriceEur .
 
 # rdfs:Datatype
 :PriceEur   rdf:type    rdfs:Datatype .

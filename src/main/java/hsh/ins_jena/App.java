@@ -8,7 +8,8 @@ import hsh.ins_jena.model.Generator;
  */
 public class App {
 	public static void main(String[] args) {
-		System.out.println("Generating TBox ...");
-		Generator.createTBox();
+		System.out.print("Generating ... ");
+		Generator.createTBoxAndABox();
+		System.out.println("done.");
 	}
 }
