@@ -41,3 +41,15 @@ WHERE {
   ?console rev:hasReview ?anyReview .
 }
 
+# Construct triples for something different
+# Map CEO to consoles
+CONSTRUCT {
+  ?ceo :isRelatedToConsole ?console .
+}
+WHERE {
+  ?console rdf:type :GameConsole .
+  ?console :madeBy  ?org .
+  ?org :ceo ?ceo .
+  ?ceo rdf:type foaf:Person .
+}
+
