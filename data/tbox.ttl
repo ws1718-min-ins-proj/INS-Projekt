@@ -42,6 +42,11 @@
                     rdfs:domain :GameConsole ;
                     rdfs:range  xsd:int .
 
+:madeBy             rdf:type    rdf:Property ;
+                    rdfs:domain :GameConsole ;
+                    rdfs:range  foaf:Organization .
+
+
 # rdfs:Datatype
 :PriceEur   rdf:type    rdfs:Datatype .
 :PriceEur   rdfs:label  "Preis in Euro"^^xsd:string .

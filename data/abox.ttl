@@ -10,6 +10,7 @@
             foaf:givenName      "Tatsumi"^^xsd:string .
 
 :Wii        rdf:type            :GameConsole .
+:Wii        :madeBy             :Nintendo .
 
 :Nintendo   rdf:type       foaf:Organization ;
             :ceo           :Kimishima ;
@@ -22,9 +23,11 @@
         :numOfSupportedControllers  8 ;
         :predecessorOfConsole       :Wii ;
         :releaseYear                2012 ;
+        :madeBy                     :Nintendo ;
         :successorOfConsole         :Switch .
 
 :Switch  rdf:type       :PortableGameConsole .
+:Switch  :madeBy        :Nintendo
 :Switch  rev:hasReview  :SwitchReviewByJPT .
 
 :JPT	rdf:type	foaf:Person ;

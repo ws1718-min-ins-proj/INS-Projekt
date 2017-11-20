@@ -1,0 +1,15 @@
+# Common prefixes across all queries
+PREFIX :	<http://example.com/ins_uebung/#>
+PREFIX rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX xsd:	<http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs:	<http://www.w3.org/2000/01/rdf-schema#>
+PREFIX foaf:	<http://xmlns.com/foaf/0.1/>
+PREFIX rev:	<http://purl.org/stuff/rev#>
+
+# How many consoles did nintendo produce?
+SELECT COUNT(?console) AS ?numConsoles
+WHERE {
+  ?console :madeBy ?organization .  
+}
+GROUP BY ?organization
+
