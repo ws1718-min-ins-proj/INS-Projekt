@@ -1,0 +1,58 @@
+@prefix :   	<http://example.com/ins_uebung/#> .
+@prefix rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf:	<http://xmlns.com/foaf/0.1/> .
+@prefix rev:	<http://purl.org/stuff/rev#> .
+
+# Our own properties
+:ceo    rdf:type    rdf:Property ;
+        rdfs:domain foaf:Organization ;
+        rdfs:range  foaf:Person .
+
+:foundingYear   rdf:type    rdf:Property ;
+                rdfs:domain foaf:Organization ;
+                rdfs:range  xsd:int .
+
+:internetEnabled    rdf:type    rdf:Property ;
+                    rdfs:domain :GameConsole ;
+                    rdfs:range  xsd:boolean .
+
+:consoleName        rdf:type    rdf:Property ;
+                    rdfs:domain :GameConsole ;
+                    rdfs:range  xsd:string .
+
+:numOfSupportedControllers  rdf:type    rdf:Property ;
+                            rdfs:domain :GameConsole ;
+                            rdfs:range  xsd:string .
+
+:predecessorOfConsole        rdf:type    rdf:Property ;
+                    rdfs:domain :GameConsole ;
+                    rdfs:range  :GameConsole .
+
+:successorOfConsole          rdf:type    rdf:Property ;
+                    rdfs:domain :GameConsole ;
+                    rdfs:range  :GameConsole .
+
+:relatedToConsole   rdf:type    rdf:Property ;
+                    rdfs:domain :GameConsole ;
+                    rdfs:range  :GameConsole .
+
+:releaseYear        rdf:type    rdf:Property ;
+                    rdfs:domain :GameConsole ;
+                    rdfs:range  xsd:int .
+
+# rdfs:Datatype
+:PriceEur   rdf:type    rdfs:Datatype .
+:PriceEur   rdfs:label  "Preis in Euro"^^xsd:string .
+
+# Anwendungsbeispiel: :Switch :hasPrice   "329,00€"^^:PriceEur .
+
+# rdfs:subPropertyOf
+:predecessorOfConsole        rdfs:subPropertyOf  :relatedToConsole .
+:successorOfConsole          rdfs:subPropertyOf  :relatedToConsole .
+
+# rdfs:subClassOf
+:PortableGameConsole    rdf:type        rdfs:Class .
+:GameConsole            rdf:type        rdfs:Class .
+:PortableGameConsole    rdfs:subClassOf :GameConsole .

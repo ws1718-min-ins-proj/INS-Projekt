@@ -1,0 +1,40 @@
+@prefix :   	<http://example.com/ins_uebung/#> .
+@prefix rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf:	<http://xmlns.com/foaf/0.1/> .
+@prefix rev:	<http://purl.org/stuff/rev#> .
+
+:Kimishima  rdf:type            foaf:Person ;
+            foaf:familyName     "Kimishima"^^xsd:string ;
+            foaf:givenName      "Tatsumi"^^xsd:string .
+
+:Wii        rdf:type            :GameConsole .
+
+:Nintendo   rdf:type       foaf:Organization ;
+            :ceo           :Kimishima ;
+            :foundingYear  1889 ;
+            foaf:name      "Nintendo Co., Ltd."^^xsd:string .
+
+:Wii_u  rdf:type                    :GameConsole ;
+        :internetEnabled            true ;
+        :consoleName                "Wii U"^^xsd:string ;
+        :numOfSupportedControllers  8 ;
+        :predecessorOfConsole       :Wii ;
+        :releaseYear                2012 ;
+        :successorOfConsole         :Switch .
+
+:Switch  rdf:type       :PortableGameConsole .
+:Switch  rev:hasReview  :SwitchReviewByJPT .
+
+:JPT	rdf:type	foaf:Person ;
+    	foaf:name	"Jan Philipp Timme"^^xsd:string .
+
+:Maschell	rdf:type	foaf:Person ;
+            foaf:name	"Marcel Felix"^^xsd:string .
+
+:SwitchReview	rdf:type    	rev:Review ;
+            	rev:reviewer	:JPT ;
+            	rev:text	    "Yet another gaming console. I lost a tetris game once. Meh."^^xsd:string .
+
+:Switch         :hasPrice       "329,00€"^^:PriceEur .

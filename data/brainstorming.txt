@@ -1,0 +1,38 @@
+Vokabularien:
+* FOAF
+** http://xmlns.com/foaf/spec/20140114.html
+* rev
+** http://purl.org/stuff/rev#
+
+* Spielekonsolen
+** Name
+** Erscheinungsjahr
+** Anzahl unterstützter Controller (gleichzeitige Nutzung)
+** Portabel? (yes/no)
+** istInternetfähig?
+** hatNachfolger
+** hatVorgänger
+** verwendetSpeichermedium
+** TODO: wird von uns bewertet
+
+* Konsolenspiel
+** Titel
+** Erscheinungsjahr
+** spielbarAufKonsole
+** TODO: wird von uns bewertet
+
+* Spielehersteller (+foaf:Organization)
+** Name
+** Gründungsjahr
+** wirdGeleitetVonCEO
+
+* CEO des Herstellers (foaf:Person)
+** Vorname
+** Nachname
+** Geburtsdatum?
+
+* Speichermedium
+** Name/Bezeichnung
+** Kapazität (in Byte)
+
+* CD, DVD, Cartridge, BluRay, ... (Subklassen von Speichermedium)
