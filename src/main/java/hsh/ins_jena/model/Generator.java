@@ -26,31 +26,83 @@ public class Generator {
 		// Some boilerplate stuff
 		Property rdfType = model.createProperty(rdfUri+"type");
 		Resource rdfClass = model.createResource(rdfUri+"Class");
+		Resource rdfProperty = model.createResource(rdfUri+"Property");
 		
 		Property rdfsSubclassOf = model.createProperty(rdfsUri+"subclassOf");
+		Property rdfsDomain = model.createProperty(rdfsUri+"domain");
+		Property rdfsRange = model.createProperty(rdfsUri+"range");
 
+		Resource foafPerson = model.createResource(foafUri+"Person");
+		Resource foafOrganization = model.createResource(foafUri+"Organization");
+
+		Resource xsdInt = model.createResource(xsdUri+"int");
+		Resource xsdBoolean = model.createResource(xsdUri+"boolean");
+		Resource xsdString = model.createResource(xsdUri+"string");
+		
+		// Own classes
 		Resource gameConsole = model.createResource(ownUri+"GameConsole");
 		Resource portableGameConsole = model.createResource(ownUri+"PortableGameConsole");
-		
+
+		// Add statements to the model
 		model.add(model.createStatement(gameConsole, rdfType, rdfClass));
 		model.add(model.createStatement(portableGameConsole, rdfType, rdfClass));
 		model.add(model.createStatement(portableGameConsole, rdfsSubclassOf, gameConsole));
-		
-		/*
-		Resource donald = model.createResource(familyUri + "donald");
-		Resource tick = model.createResource(familyUri + "tick");
 
-		Property childOf = model.createProperty(relationshipUri, "childOf");
-		Property knows = model.createProperty(relationshipUri, "knows");
-		tick.addProperty(childOf, donald);
-
-		Statement st1 = model.createStatement(donald, knows, tick);
-		model.add(st1);
-		*/
+		// Add properties to the model
+		Resource ceo = model.createProperty(ownUri+"ceo");
+		ceo.addProperty(rdfType, rdfProperty);
+		ceo.addProperty(rdfsDomain, foafOrganization);
+		ceo.addProperty(rdfsRange, foafPerson);
 		
-		Generator.writeModelToFile(model, "./tbox.ttl");
+		Resource foundingYear = model.createProperty(ownUri+"foundingYear");
+		foundingYear.addProperty(rdfType, rdfProperty);
+		foundingYear.addProperty(rdfsDomain, foafOrganization);
+		foundingYear.addProperty(rdfsRange, xsdInt);
+
+		Resource internetEnabled = model.createProperty(ownUri+"internetEnabled");
+		internetEnabled.addProperty(rdfType, rdfProperty);
+		internetEnabled.addProperty(rdfsDomain, gameConsole);
+		internetEnabled.addProperty(rdfsRange, xsdBoolean);
+		
+		Resource consoleName = model.createProperty(ownUri+"consoleName");
+		consoleName.addProperty(rdfType, rdfProperty);
+		consoleName.addProperty(rdfsDomain, gameConsole);
+		consoleName.addProperty(rdfsRange, xsdString);
+		
+		Resource numOfSupportedControllers = model.createProperty(ownUri+"numOfSupportedControllers");
+		numOfSupportedControllers.addProperty(rdfType, rdfProperty);
+		numOfSupportedControllers.addProperty(rdfsDomain, gameConsole);
+		numOfSupportedControllers.addProperty(rdfsRange, xsdInt);
+		
+		Resource predecessorOfConsole = model.createProperty(ownUri+"predecessorOfConsole");
+		predecessorOfConsole.addProperty(rdfType, rdfProperty);
+		predecessorOfConsole.addProperty(rdfsDomain, gameConsole);
+		predecessorOfConsole.addProperty(rdfsRange, gameConsole);
+		
+		Resource successorOfConsole = model.createProperty(ownUri+"successorOfConsole");
+		successorOfConsole.addProperty(rdfType, rdfProperty);
+		successorOfConsole.addProperty(rdfsDomain, gameConsole);
+		successorOfConsole.addProperty(rdfsRange, gameConsole);
+
+		Resource relatedToConsole = model.createProperty(ownUri+"relatedToConsole");
+		relatedToConsole.addProperty(rdfType, rdfProperty);
+		relatedToConsole.addProperty(rdfsDomain, gameConsole);
+		relatedToConsole.addProperty(rdfsRange, gameConsole);
+
+		Resource releaseYear = model.createProperty(ownUri+"releaseYear");
+		releaseYear.addProperty(rdfType, rdfProperty);
+		releaseYear.addProperty(rdfsDomain, gameConsole);
+		releaseYear.addProperty(rdfsRange, xsdInt);
+
+		Resource madeBy = model.createProperty(ownUri+"madeBy");
+		madeBy.addProperty(rdfType, rdfProperty);
+		madeBy.addProperty(rdfsDomain, gameConsole);
+		madeBy.addProperty(rdfsRange, foafOrganization);
+
+		// Store the model into a file
+		Generator.writeModelToFile(model, "./output/tbox.ttl");
 	}
-	
+		
 	private static void writeModelToFile(Model model, String path) {
 		FileOutputStream outfile = null;
 		try {
