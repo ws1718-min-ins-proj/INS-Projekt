@@ -1,3 +1,16 @@
+# Eclipse stuff
 .settings
 
+# Compile artifacts
 *.class
+*.jar
+
+# Target stuff
+target/classes/META-INF/
+target/maven-archiver/
+target/maven-status/
+target/surefire-reports/
+
+# Own files
+test.ttl
+
