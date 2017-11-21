@@ -24,21 +24,19 @@ public class App {
 	}
 
 	private static void readAndHandleFiles(String inputPath) {
-		Model tboxModel = ModelFactory.createDefaultModel();
-		Model aboxModel = ModelFactory.createDefaultModel();
+		Model model = ModelFactory.createDefaultModel();
 
 		InputStream inT, inA;
 		try {
 			inT = new FileInputStream(new File(inputPath + "/" + Generator.T_BOX_FILENAME_XML));
 			inA = new FileInputStream(new File(inputPath + "/" + Generator.A_BOX_FILENAME_XML));
-			tboxModel.read(inT, "");
-			aboxModel.read(inA, "");
+			model.read(inT, "");
+			model.read(inA, "");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 
-		System.out.println(tboxModel);
-		System.out.println(aboxModel);
+		System.out.println(model);
 
 		Query query = QueryFactory.create("" + "PREFIX : <" + Generator.OWN_URI + ">" + "" + "SELECT ?console\n"
 				+ "WHERE {\n" + "  ?console :madeBy :Nintendo .\n" + "  ?console :releaseYear ?releaseYear .  \n"
@@ -47,7 +45,7 @@ public class App {
 //		Query query = QueryFactory
 //				.create("PREFIX : <" + Generator.OWN_URI + ">" + " " + " SELECT ?s ?p ?p WHERE {" + "?s ?p ?o .}");
 
-		QueryExecution queryExec = QueryExecutionFactory.create(query, aboxModel);
+		QueryExecution queryExec = QueryExecutionFactory.create(query, model);
 
 		ResultSet rs = queryExec.execSelect();
 
