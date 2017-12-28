@@ -36,9 +36,9 @@ public class App {
 		// Do some validity checking
 		ValidityReport validity = rdfsModel.validate();
 		if (validity.isValid()) {
-		    System.out.println("\nValidity Report: OK");
+		    System.out.println("\nRDFSModel Validity Report: OK");
 		} else {
-		    System.out.println("\nValidity Report: Conflicts!");
+		    System.out.println("\nRDFSModel Validity Report: Conflicts!");
 		    for (Iterator<ValidityReport.Report> i = validity.getReports(); i.hasNext(); ) {
 		        ValidityReport.Report report = (ValidityReport.Report)i.next();
 		        System.out.println(" - " + report);
@@ -47,12 +47,13 @@ public class App {
 		
 		// Let's create an rdfs reasoner
 		Reasoner rdfsReasoner = ReasonerRegistry.getRDFSReasoner();
-		rdfsReasoner = rdfsReasoner.bindSchema(tboxModel);
+		rdfsReasoner = rdfsReasoner.bindSchema(rdfsModel);
 		InfModel infModel = ModelFactory.createInfModel(rdfsReasoner, rdfsModel);
 
 		System.err.println("infModel");
 		System.out.println(infModel);
 		
+		// Let's define a bunch of queries
 		Query queryReleaseYear = QueryFactory.create(
 				"PREFIX : <" + Generator.OWN_URI + ">" 
 				+ "SELECT ?console\n"
@@ -66,7 +67,6 @@ public class App {
 				+ "  ?console :madeBy :Nintendo .\n"
 				+ "}");
 
-		
 		Query queryCEOForConsole = QueryFactory.create(
 			"PREFIX : <" + Generator.OWN_URI + ">" +
 			"PREFIX rdf: <" + Generator.RDF_URI + ">" +
@@ -83,13 +83,14 @@ public class App {
 			"}\n" + 
 			"");
 
-		//Query queryAll = QueryFactory.create("PREFIX : <" + Generator.OWN_URI + ">" + " " + " SELECT ?s ?p ?p WHERE {" + "?s ?p ?o .}");
+		Query queryAll = QueryFactory.create("PREFIX : <" + Generator.OWN_URI + ">" + " " + " SELECT ?s ?p ?p WHERE {" + "?s ?p ?o .}");
 
-		QueryExecution queryExecLocalConsoles = QueryExecutionFactory.create(queryConsoles, infModel);
+		// Let's execute one query and print its results
+		QueryExecution queryExecLocalConsoles = QueryExecutionFactory.create(queryAll, infModel);
 		System.err.println("Show consoles from local model");
 		printQueryResult(queryExecLocalConsoles);
 		
-		
+		// Let's do more
 		QueryExecution queryExecLocalReleaseDate = QueryExecutionFactory.create(queryReleaseYear, infModel);
 		QueryExecution queryExecRemoteReleaseDate = QueryExecutionFactory.sparqlService(SPARQL_ENDPOINT, queryReleaseYear);
 		
@@ -117,7 +118,7 @@ public class App {
 
 	private static void generateFiles(String outputhPath) {
 		new File(OUTPUT_PATH).mkdirs();
-		System.err.println("Generating model and saving it...");
+		System.out.println("Generating model and saving it...");
 		Generator.createTBoxAndABox(OUTPUT_PATH);
 		System.out.println("done.");
 	}
