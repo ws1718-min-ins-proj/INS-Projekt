@@ -27,7 +27,7 @@
         :successorOfConsole         :Switch .
 
 :Switch  rdf:type       :PortableGameConsole .
-:Switch  :madeBy        :Nintendo
+:Switch  :madeBy        :Nintendo .
 :Switch  rev:hasReview  :SwitchReviewByJPT .
 
 :JPT	rdf:type	foaf:Person ;
