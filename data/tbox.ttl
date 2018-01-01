@@ -62,11 +62,9 @@
 :successorOfConsole          rdfs:subPropertyOf  :relatedToConsole .
 
 # rdfs:subClassOf
-:PortableGameConsole2    rdf:type        rdfs:Class .
 :PortableGameConsole    rdf:type        rdfs:Class .
 :GameConsole            rdf:type        rdfs:Class .
 :PortableGameConsole    rdfs:subClassOf :GameConsole .
-
 
 :HomeConsole owl:equivalentClass [
   rdf:type owl:Class ;
