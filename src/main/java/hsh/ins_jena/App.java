@@ -3,6 +3,7 @@ package hsh.ins_jena;
 import java.io.File;
 import java.util.Iterator;
 
+import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
@@ -10,16 +11,22 @@ import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.InfModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.reasoner.ValidityReport;
+import org.apache.jena.reasoner.ValidityReport.Report;
 import org.apache.jena.util.FileManager;
+import org.apache.jena.util.PrintUtil;
 
 import hsh.ins_jena.model.Generator;
 
 public class App {
 	public static String OUTPUT_PATH = "./output";
-	public static String SPARQL_ENDPOINT = "http://localhost:3030/foobar/query";
+	public static String SPARQL_ENDPOINT = "http://localhost:3030/test/query";
 
 	public static void main(String[] args) {
 		generateFiles(OUTPUT_PATH);
@@ -27,92 +34,107 @@ public class App {
 	}
 
 	private static void readAndHandleFiles(String inputPath) {
-		Model tboxModel = FileManager.get().loadModel("file:" + inputPath + "/" + Generator.T_BOX_FILENAME_XML);
-		Model aboxModel = FileManager.get().loadModel("file:" + inputPath + "/" + Generator.A_BOX_FILENAME_XML);
+		// Model owlTboxModel = FileManager.get().loadModel("file:" + "data/owl.ttl");
+		// Model tboxModel = FileManager.get().loadModel("file:" + inputPath + "/" +
+		// Generator.T_BOX_FILENAME_XML);
+		// Model aboxModel = FileManager.get().loadModel("file:" + inputPath + "/" +
+		// Generator.A_BOX_FILENAME_XML);
+		Model tboxModel = FileManager.get().loadModel("file:" + "data/tbox.ttl");
+		Model aboxModel = FileManager.get().loadModel("file:" + "data/abox.ttl");
 
 		// Combine both models to an RDFS model
-		InfModel rdfsModel = ModelFactory.createRDFSModel(tboxModel, aboxModel);
-		
-		// Do some validity checking
-		ValidityReport validity = rdfsModel.validate();
-		if (validity.isValid()) {
-		    System.out.println("\nRDFSModel Validity Report: OK");
-		} else {
-		    System.out.println("\nRDFSModel Validity Report: Conflicts!");
-		    for (Iterator<ValidityReport.Report> i = validity.getReports(); i.hasNext(); ) {
-		        ValidityReport.Report report = (ValidityReport.Report)i.next();
-		        System.out.println(" - " + report);
-		    }
-		}
-		
-		// Let's create an rdfs reasoner
-		Reasoner rdfsReasoner = ReasonerRegistry.getRDFSReasoner();
-		rdfsReasoner = rdfsReasoner.bindSchema(rdfsModel);
-		InfModel infModel = ModelFactory.createInfModel(rdfsReasoner, rdfsModel);
+		/*
+		 * Model tBoxComplete = ModelFactory.createDefaultModel();
+		 * tBoxComplete.add(owlTboxModel); tBoxComplete.add(aboxModel);
+		 */
 
-		System.err.println("infModel");
-		System.out.println(infModel);
-		
+		// Let's create an owl reasoner
+		Reasoner reasoner = ReasonerRegistry.getOWLReasoner();
+		reasoner = reasoner.bindSchema(tboxModel);
+		OntModelSpec ontModelSpec = OntModelSpec.OWL_DL_MEM_RULE_INF;
+		ontModelSpec.setReasoner(reasoner);
+		InfModel infModel = ModelFactory.createOntologyModel(ontModelSpec, aboxModel);
+
+		ValidityReport validity = infModel.validate();
+		if (validity.isValid()) {
+			System.out.println("Validation: OK");
+		} else {
+			System.out.println("Conflicts");
+			for (Iterator<Report> i = validity.getReports(); i.hasNext();) {
+				ValidityReport.Report report = (ValidityReport.Report) i.next();
+				System.out.println(" - " + report);
+			}
+		}
+
+		printResource(infModel, "Switch");
+		printResource(infModel, "PartyConsole");
+		printResource(infModel, "NintendoConsole");
+
 		// Let's define a bunch of queries
-		Query queryReleaseYear = QueryFactory.create(
-				"PREFIX : <" + Generator.OWN_URI + ">" 
-				+ "SELECT ?console\n"
+		Query queryReleaseYear = QueryFactory.create("PREFIX : <" + Generator.OWN_URI + ">" + "SELECT ?console\n"
 				+ "WHERE {\n" + "  ?console :madeBy :Nintendo .\n" + "  ?console :releaseYear ?releaseYear .  \n"
 				+ "  FILTER(?releaseYear > 2015)\n" + "}");
-		
-		Query queryConsoles = QueryFactory.create(
-				"PREFIX : <" + Generator.OWN_URI + ">" 
-				+ "SELECT ?console\n"
-				+ "WHERE {\n" 
-				+ "  ?console :madeBy :Nintendo .\n"
-				+ "}");
 
-		Query queryCEOForConsole = QueryFactory.create(
-			"PREFIX : <" + Generator.OWN_URI + ">" +
-			"PREFIX rdf: <" + Generator.RDF_URI + ">" +
-			"PREFIX rdfs: <" + Generator.RDFS_URI + ">" +
-			"PREFIX foaf: <" + Generator.FOAF_URI + ">" +
-			"CONSTRUCT {\n" + 
-			"  ?ceo :isRelatedToConsole ?console .\n" + 
-			"}\n" + 
-			"WHERE {\n" + 
-			"  ?console rdf:type :GameConsole .\n" + 
-			"  ?console :madeBy  ?org .\n" + 
-			"  ?org :ceo ?ceo .\n" + 
-			"  ?ceo rdf:type foaf:Person .\n" + 
-			"}\n" + 
-			"");
+		Query queryNintendoConsoles = QueryFactory
+				.create("PREFIX : <" + Generator.OWN_URI + ">" + "PREFIX rdf: <" + Generator.RDF_URI + ">"
+						+ "SELECT ?console\n" + "WHERE {\n" + "  ?console rdf:type :NintendoConsole .\n" + "}");
 
-		Query queryAll = QueryFactory.create("PREFIX : <" + Generator.OWN_URI + ">" + " " + " SELECT ?s ?p ?p WHERE {" + "?s ?p ?o .}");
+		Query queryCEOForConsole = QueryFactory.create("PREFIX : <" + Generator.OWN_URI + ">" + "PREFIX rdf: <"
+				+ Generator.RDF_URI + ">" + "PREFIX rdfs: <" + Generator.RDFS_URI + ">" + "PREFIX foaf: <"
+				+ Generator.FOAF_URI + ">" + "CONSTRUCT {\n" + "  ?ceo :isRelatedToConsole ?console .\n" + "}\n"
+				+ "WHERE {\n" + "  ?console rdf:type :GameConsole .\n" + "  ?console :madeBy  ?org .\n"
+				+ "  ?org :ceo ?ceo .\n" + "  ?ceo rdf:type foaf:Person .\n" + "}\n" + "");
+
+		Query queryAll = QueryFactory
+				.create("PREFIX : <" + Generator.OWN_URI + ">" + " " + " SELECT ?s ?p ?p WHERE {" + "?s ?p ?o .}");
 
 		// Let's execute one query and print its results
 		QueryExecution queryExecLocalConsoles = QueryExecutionFactory.create(queryAll, infModel);
 		System.err.println("Show consoles from local model");
-		printQueryResult(queryExecLocalConsoles);
+		// printQueryResult(queryExecLocalConsoles);
 		
+		QueryExecution queryExecNintendoConsoles = QueryExecutionFactory.create(queryNintendoConsoles, infModel);
+		System.out.println(">> Doing local NintendoConsoles query");
+		printQueryResult(queryExecNintendoConsoles);
+
 		// Let's do more
-		QueryExecution queryExecLocalReleaseDate = QueryExecutionFactory.create(queryReleaseYear, infModel);
-		QueryExecution queryExecRemoteReleaseDate = QueryExecutionFactory.sparqlService(SPARQL_ENDPOINT, queryReleaseYear);
-		
+		QueryExecution queryExecLocalReleaseDate = QueryExecutionFactory.create(queryCEOForConsole, infModel);
+		QueryExecution queryExecRemoteReleaseDate = QueryExecutionFactory.sparqlService(SPARQL_ENDPOINT,
+				queryReleaseYear);
+
 		QueryExecution queryExecLocalCEOtoConsole = QueryExecutionFactory.create(queryCEOForConsole, infModel);
-		QueryExecution queryExecRemoteCEOtoConsole = QueryExecutionFactory.sparqlService(SPARQL_ENDPOINT, queryCEOForConsole);
-		
-		System.err.println("Doing local release date query");
+		QueryExecution queryExecRemoteCEOtoConsole = QueryExecutionFactory.sparqlService(SPARQL_ENDPOINT,
+				queryCEOForConsole);
+
+		System.out.println(">> Doing local release date query");
 		printQueryResult(queryExecLocalReleaseDate);
-		System.err.println("Doing remote release date query");
+		System.out.println(">> Doing remote release date query");
 		printQueryResult(queryExecRemoteReleaseDate);
-		
-		System.err.println("Doing local CEO query");
+
+		System.out.println(">> Doing local CEO query");
 		printQueryConstructs(queryExecLocalCEOtoConsole);
-		System.err.println("Doing remote CEO query");
+		System.out.println(">> Doing remote CEO query");
 		printQueryConstructs(queryExecRemoteCEOtoConsole);
 	}
-	
+
+	private static void printResource(Model model, String resource) {
+		Resource nForce = model.getResource("http://example.com/ins_uebung/#" + resource);
+		System.out.println(resource + "*:");
+		printStatements(model, nForce, null, null);
+	}
+
+	public static void printStatements(Model m, Resource s, Property p, Resource o) {
+		for (StmtIterator i = m.listStatements(s, p, o); i.hasNext();) {
+			Statement stmt = i.nextStatement();
+			System.out.println(" - " + PrintUtil.print(stmt));
+		}
+	}
+
 	private static void printQueryResult(QueryExecution queryExec) {
 		queryExec.execSelect().forEachRemaining(qs -> System.out.println(qs));
 	}
-	
-	private static void printQueryConstructs(QueryExecution queryExec) {		
+
+	private static void printQueryConstructs(QueryExecution queryExec) {
 		queryExec.execConstruct().listStatements().toList().stream().forEach(s -> System.out.println(s));
 	}
 

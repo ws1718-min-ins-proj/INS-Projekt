@@ -27,10 +27,12 @@ public class Generator {
 	public static final String XSD_URI = "http://www.w3.org/2001/XMLSchema#";
 	public static final String FOAF_URI = "http://xmlns.com/foaf/0.1/";
 	public static final String REV_URI = "http://purl.org/stuff/rev#";
+	public static final String OWL_URI = "http://www.w3.org/2002/07/owl#";
 	
 	public static final String MODEL_TURTLE = "TURTLE";
 	public static final String MODEL_JSON = "JSON-LD";
 	public static final String MODEL_RDF_XML = "RDF/XML";
+
 
 	public static void createTBoxAndABox() {
 		createTBoxAndABox(".");
@@ -50,7 +52,7 @@ public class Generator {
 		Property rdfsRange = tboxModel.createProperty(RDFS_URI + "range");
 		Property rdfsLabel = tboxModel.createProperty(RDFS_URI + "label");
 		Resource rdfsDatatype = tboxModel.createResource(RDFS_URI + "Datatype");
-
+		
 		Resource foafPerson = tboxModel.createResource(FOAF_URI + "Person");
 		Resource foafOrganization = tboxModel.createResource(FOAF_URI + "Organization");
 
@@ -196,6 +198,7 @@ public class Generator {
 		switchReviewByJPT.addProperty(rdfType, revReview);
 		switchReviewByJPT.addProperty(revReviewer, jpt);
 		switchReviewByJPT.addProperty(revText, "Yet another gaming console. I lost a tetris game once. Meh.");
+		
 
 		cSwitch.addProperty(revHasReview, switchReviewByJPT);
 

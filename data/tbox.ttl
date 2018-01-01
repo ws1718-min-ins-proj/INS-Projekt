@@ -4,6 +4,7 @@
 @prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix foaf:	<http://xmlns.com/foaf/0.1/> .
 @prefix rev:	<http://purl.org/stuff/rev#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
 
 # Our own properties
 :ceo    rdf:type    rdf:Property ;
@@ -24,7 +25,7 @@
 
 :numOfSupportedControllers  rdf:type    rdf:Property ;
                             rdfs:domain :GameConsole ;
-                            rdfs:range  xsd:string .
+                            rdfs:range  xsd:int .
 
 :predecessorOfConsole        rdf:type    rdf:Property ;
                     rdfs:domain :GameConsole ;
@@ -48,19 +49,42 @@
 
 :hasPrice           rdf:type    rdf:Property ;
                     rdfs:domain :GameConsole ;
-                    rdfs:range  :PriceEur .
+                    rdfs:range  :xsd:string .
 
 # rdfs:Datatype
 :PriceEur   rdf:type    rdfs:Datatype .
 :PriceEur   rdfs:label  "Preis in Euro"^^xsd:string .
 
-# Anwendungsbeispiel: :Switch :hasPrice   "329,00€"^^:PriceEur .
+# Anwendungsbeispiel: :Switch :hasPrice   "329,00"^^:PriceEur .
 
 # rdfs:subPropertyOf
 :predecessorOfConsole        rdfs:subPropertyOf  :relatedToConsole .
 :successorOfConsole          rdfs:subPropertyOf  :relatedToConsole .
 
 # rdfs:subClassOf
+:PortableGameConsole2    rdf:type        rdfs:Class .
 :PortableGameConsole    rdf:type        rdfs:Class .
 :GameConsole            rdf:type        rdfs:Class .
 :PortableGameConsole    rdfs:subClassOf :GameConsole .
+
+
+:HomeConsole owl:equivalentClass [
+  rdf:type owl:Class ;
+  owl:intersectionOf (
+    :GameConsole [owl:complementOf :PortableGameConsole]
+  )
+] .
+
+:NintendoConsole owl:equivalentClass [
+  rdf:type              owl:Restriction ;
+  owl:onProperty        :madeBy ;
+  owl:someValuesFrom    :Nintendo
+] .
+
+:PartyConsole 	rdf:equivalentClass [
+  rdf:type                      owl:Restriction ;
+  owl:minQualifiedCardinality   "2"^^xsd:nonNegativeInteger ;
+  owl:onProperty                :numOfSupportedControllers ;
+  owl:onClass                   :GameConsole
+] .
+
