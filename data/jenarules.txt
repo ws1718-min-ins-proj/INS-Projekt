@@ -1,0 +1,17 @@
+@prefix :   	<http://example.com/ins_uebung/#> .
+@prefix rdf:	<http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:	<http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf:	<http://xmlns.com/foaf/0.1/> .
+@prefix rev:	<http://purl.org/stuff/rev#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+
+[rule1: (?con rdf:type :GameConsole) (?con :predecessorOfConsole ?otherCon)
+    noValue(?otherCon :successorOfConsole ?con)
+    -> (?otherCon :successorOfConsole ?con)]
+
+[rule2: (?con :hasPrice ?someValue)
+    -> remove(?con :hasPrice ?someValue)]
+
+[rule3: (?con rev:hasReview ?rev) (?rev rev:reviewer ?reviewer)
+    -> (?reviewer :hasReviewedConsole ?con)]

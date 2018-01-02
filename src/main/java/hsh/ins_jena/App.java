@@ -22,6 +22,8 @@ import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.reasoner.ReasonerRegistry;
 import org.apache.jena.reasoner.ValidityReport;
 import org.apache.jena.reasoner.ValidityReport.Report;
+import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
+import org.apache.jena.reasoner.rulesys.Rule;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.PrintUtil;
 
@@ -45,12 +47,17 @@ public class App {
         // Let's create an owl reasoner
         Reasoner reasoner = ReasonerRegistry.getOWLReasoner();
         reasoner = reasoner.bindSchema(tboxModel);
-        OntModelSpec ontModelSpec = OntModelSpec.OWL_DL_MEM_RULE_INF;
-        ontModelSpec.setReasoner(reasoner);
+        //OntModelSpec ontModelSpec = OntModelSpec.OWL_DL_MEM_RULE_INF;
+        //ontModelSpec.setReasoner(reasoner);
         InfModel infModel = ModelFactory.createInfModel(reasoner, aboxModel);
 
         validate(infModel);
+        reasoner = new GenericRuleReasoner(Rule.rulesFromURL("data/jenarules.txt"));
+        infModel = ModelFactory.createInfModel(reasoner, aboxModel);
+        
+        validate(infModel);
 
+        printResource(infModel, "JPT");
         printResource(infModel, "Wii");
         printResource(infModel, "Wii_u");
         printResource(infModel, "Switch");

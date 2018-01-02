@@ -49,7 +49,7 @@
 
 :hasPrice           rdf:type    rdf:Property ;
                     rdfs:domain :GameConsole ;
-                    rdfs:range  :xsd:string .
+                    rdfs:range  xsd:int .
 
 # rdfs:Datatype
 :PriceEur   rdf:type    rdfs:Datatype .

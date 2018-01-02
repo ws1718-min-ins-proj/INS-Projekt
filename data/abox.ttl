@@ -30,7 +30,8 @@
 :Switch  	a 			   :PortableGameConsole ;
 		  	:madeBy        :Nintendo ;
 		  	:releaseYear   2017 ;
-		  	rev:hasReview  :SwitchReviewByJPT .
+		  	rev:hasReview  :SwitchReviewByJPT;
+			:hasPrice      329 .
 
 :Playstation4 	a			:GameConsole .
 
@@ -44,4 +45,4 @@
             	rev:reviewer	:JPT ;
             	rev:text	    "Yet another gaming console. I lost a tetris game once. Meh."^^xsd:string .
 
-:Switch         :hasPrice       "329,00"^^:PriceEur .
+
