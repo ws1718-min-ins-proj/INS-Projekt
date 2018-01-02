@@ -14,6 +14,8 @@
 :Wii        :madeBy                 :Nintendo .
 :Wii        :predecessorOfConsole   :Wii_u .
 
+:Sony   	a		       foaf:Organization.
+
 :Nintendo   a		       foaf:Organization ;
             :ceo           :Kimishima ;
             :foundingYear  1889 ;
@@ -33,7 +35,9 @@
 		  	rev:hasReview  :SwitchReviewByJPT;
 			:hasPrice      329 .
 
-:Playstation4 	a			:GameConsole .
+# Should create an conflict
+:Playstation4 	a			:NintendoConsole;
+			    :madeBy                     :Sony.
 
 :JPT	rdf:type	foaf:Person ;
     	foaf:name	"Jan Philipp Timme"^^xsd:string .

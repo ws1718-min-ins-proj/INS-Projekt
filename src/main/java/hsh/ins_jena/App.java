@@ -53,7 +53,7 @@ public class App {
 
         validate(infModel);
         reasoner = new GenericRuleReasoner(Rule.rulesFromURL("data/jenarules.txt"));
-        infModel = ModelFactory.createInfModel(reasoner, aboxModel);
+        infModel = ModelFactory.createInfModel(reasoner, infModel);
         
         validate(infModel);
 
