@@ -41,8 +41,8 @@
 :Maschell	a			foaf:Person ;
             foaf:name	"Marcel Felix"^^xsd:string .
 
-:SwitchReview	a    			rev:Review ;
-            	rev:reviewer	:JPT ;
-            	rev:text	    "Yet another gaming console. I lost a tetris game once. Meh."^^xsd:string .
+:SwitchReviewByJPT	a    			rev:Review ;
+            		rev:reviewer	:JPT ;
+            		rev:text	    "Yet another gaming console. I lost a tetris game once. Meh."^^xsd:string .
 
 
