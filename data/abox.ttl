@@ -10,8 +10,9 @@
             foaf:givenName      "Tatsumi"^^xsd:string .
 
 :Wii        a		            :GameConsole .
-:Wii        :releaseYear        2006 .
-:Wii        :madeBy             :Nintendo .
+:Wii        :releaseYear            2006 .
+:Wii        :madeBy                 :Nintendo .
+:Wii        :predecessorOfConsole   :Wii_u .
 
 :Nintendo   a		       foaf:Organization ;
             :ceo           :Kimishima ;
@@ -22,10 +23,9 @@
         :internetEnabled            true ;
         :consoleName                "Wii U"^^xsd:string ;
         :numOfSupportedControllers  8;
-        :predecessorOfConsole       :Wii ;
         :releaseYear                2012 ;
         :madeBy                     :Nintendo ;
-        :successorOfConsole         :Switch .
+        :predecessorOfConsole       :Switch .
 
 :Switch  	a 			   :PortableGameConsole ;
 		  	:madeBy        :Nintendo ;
