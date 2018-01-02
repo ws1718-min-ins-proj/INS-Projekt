@@ -11,7 +11,7 @@
     -> (?otherCon :successorOfConsole ?con)]
 
 [rule2: (?con :hasPrice ?someValue)
-    -> remove(?con :hasPrice ?someValue)]
+    -> remove(0)]
 
 [rule3: (?con rev:hasReview ?rev) (?rev rev:reviewer ?reviewer)
     -> (?reviewer :hasReviewedConsole ?con)]
