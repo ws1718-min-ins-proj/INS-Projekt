@@ -34,10 +34,8 @@ public class App {
     }
 
     private static void readAndHandleFiles(String inputPath) {
-        // Model tboxModel = FileManager.get().loadModel("file:" + inputPath + "/"
-        // Generator.T_BOX_FILENAME_XML);
-        // Model aboxModel = FileManager.get().loadModel("file:" + inputPath + "/"
-        // Generator.A_BOX_FILENAME_XML);
+        // Model tboxModel = FileManager.get().loadModel("file:" + inputPath + "/" Generator.T_BOX_FILENAME_XML);
+        // Model aboxModel = FileManager.get().loadModel("file:" + inputPath + "/" Generator.A_BOX_FILENAME_XML);
         Model tboxModel = FileManager.get().loadModel("file:" + "data/tbox.ttl");
         Model aboxModel = FileManager.get().loadModel("file:" + "data/abox.ttl");
 
