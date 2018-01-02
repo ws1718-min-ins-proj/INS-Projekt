@@ -1,8 +1,11 @@
 package hsh.ins_jena;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 
+import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
@@ -28,12 +31,12 @@ public class App {
     public static String OUTPUT_PATH = "./output";
     public static String SPARQL_ENDPOINT = "http://localhost:3030/test/query";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         generateFiles(OUTPUT_PATH);
         readAndHandleFiles(OUTPUT_PATH);
     }
 
-    private static void readAndHandleFiles(String inputPath) {
+    private static void readAndHandleFiles(String inputPath) throws IOException {
         // Model tboxModel = FileManager.get().loadModel("file:" + inputPath + "/" Generator.T_BOX_FILENAME_XML);
         // Model aboxModel = FileManager.get().loadModel("file:" + inputPath + "/" Generator.A_BOX_FILENAME_XML);
         Model tboxModel = FileManager.get().loadModel("file:" + "data/tbox.ttl");
@@ -44,19 +47,12 @@ public class App {
         reasoner = reasoner.bindSchema(tboxModel);
         OntModelSpec ontModelSpec = OntModelSpec.OWL_DL_MEM_RULE_INF;
         ontModelSpec.setReasoner(reasoner);
-        InfModel infModel = ModelFactory.createOntologyModel(ontModelSpec, aboxModel);
+        InfModel infModel = ModelFactory.createInfModel(reasoner, aboxModel);
 
-        ValidityReport validity = infModel.validate();
-        if (validity.isValid()) {
-            System.out.println("Validation: OK");
-        } else {
-            System.out.println("Conflicts");
-            for (Iterator<Report> i = validity.getReports(); i.hasNext();) {
-                ValidityReport.Report report = (ValidityReport.Report) i.next();
-                System.out.println(" - " + report);
-            }
-        }
+        validate(infModel);
 
+        printResource(infModel, "Wii");
+        printResource(infModel, "Wii_u");
         printResource(infModel, "Switch");
         printResource(infModel, "HomeConsole");
         printResource(infModel, "PartyConsole");
@@ -102,8 +98,8 @@ public class App {
          //@formatter:on
 
         // Let's execute one query and print its results
-        QueryExecution queryExecLocalConsoles = QueryExecutionFactory.create(queryAll, infModel);
-        System.err.println("Show consoles from local model");
+        //QueryExecution queryExecLocalConsoles = QueryExecutionFactory.create(queryAll, infModel);
+        //System.err.println("Show consoles from local model");
         // printQueryResult(queryExecLocalConsoles);
 
         QueryExecution queryExecNintendoConsoles = QueryExecutionFactory.create(queryNintendoConsoles, infModel);
@@ -126,6 +122,20 @@ public class App {
         printQueryConstructs(queryExecLocalCEOtoConsole);
         System.out.println(">> Doing remote CEO query");
         printQueryConstructs(queryExecRemoteCEOtoConsole);
+    }
+
+    private static void validate(InfModel model) {
+        ValidityReport validity = model.validate();
+        if (validity.isValid()) {
+            System.out.println("Validation: OK");
+        } else {
+            System.out.println("Conflicts");
+            for (Iterator<Report> i = validity.getReports(); i.hasNext();) {
+                ValidityReport.Report report = (ValidityReport.Report) i.next();
+                System.out.println(" - " + report);
+            }
+        }
+
     }
 
     private static void printResource(Model model, String resource) {

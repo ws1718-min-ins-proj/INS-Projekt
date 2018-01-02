@@ -62,27 +62,28 @@
 :successorOfConsole          rdfs:subPropertyOf  :relatedToConsole .
 
 # rdfs:subClassOf
-:PortableGameConsole    rdf:type        rdfs:Class .
-:GameConsole            rdf:type        rdfs:Class .
+:PortableGameConsole    a        rdfs:Class .
+:GameConsole            a        rdfs:Class .
 :PortableGameConsole    rdfs:subClassOf :GameConsole .
 
 :HomeConsole owl:equivalentClass [
   rdf:type owl:Class ;
   owl:intersectionOf (
-    :GameConsole [owl:complementOf :PortableGameConsole]
+    :GameConsole [
+	  owl:complementOf          :PortableGameConsole
+	]
   )
 ] .
 
 :NintendoConsole owl:equivalentClass [
   rdf:type              owl:Restriction ;
   owl:onProperty        :madeBy ;
-  owl:someValuesFrom    :Nintendo
+  owl:hasValue          :Nintendo
 ] .
 
-:PartyConsole 	rdf:equivalentClass [
+:PartyConsole     owl:equivalentClass [
   rdf:type                      owl:Restriction ;
-  owl:minQualifiedCardinality   "2"^^xsd:nonNegativeInteger ;
+  owl:minQualifiedCardinality   "1"^^xsd:nonNegativeInteger ;
   owl:onProperty                :numOfSupportedControllers ;
-  owl:onClass                   :GameConsole
+  owl:onClass                   :GameConsole  
 ] .
-
